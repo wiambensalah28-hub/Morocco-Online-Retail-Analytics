@@ -1,1 +1,84 @@
+/*
+====================================================
+PROJECT: Moroccan E-Commerce Analysis
+FILE: 03_create_ecommerce_joined.sql
+PURPOSE: Combine Orders and Details into one
+         analytical table
+====================================================
+*/
 
+
+-- ==================================================
+-- STEP 1: Preview the joined data
+-- ==================================================
+-- The Orders and Details tables are connected using
+-- Order_ID.
+
+SELECT
+    o.Order_ID,
+    d.Total_Sales,
+    d.Profit,
+    d.Quantity,
+    d.Category,
+    d.Sub_Category,
+    d.PaymentMode,
+    o.Order_Date,
+    o.CustomerName,
+    o.State,
+    o.City
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
+LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
+    ON o.Order_ID = d.Order_ID;
+
+
+-- ==================================================
+-- STEP 2: Create the final joined table
+-- ==================================================
+
+CREATE TABLE Ecommerce_Joined (
+    Order_ID VARCHAR(50),
+    Total_Sales DECIMAL(10,2),
+    Profit DECIMAL(10,2),
+    Quantity INT,
+    Category VARCHAR(100),
+    Sub_Category VARCHAR(100),
+    PaymentMode VARCHAR(100),
+    Order_Date DATE,
+    CustomerName VARCHAR(100),
+    State VARCHAR(100),
+    City VARCHAR(100)
+);
+
+
+-- ==================================================
+-- STEP 3: Insert the joined data
+-- ==================================================
+
+INSERT INTO Ecommerce_Joined (
+    Order_ID,
+    Total_Sales,
+    Profit,
+    Quantity,
+    Category,
+    Sub_Category,
+    PaymentMode,
+    Order_Date,
+    CustomerName,
+    State,
+    City
+)
+SELECT
+    o.Order_ID,
+    d.Total_Sales,
+    d.Profit,
+    d.Quantity,
+    d.Category,
+    d.Sub_Category,
+    d.PaymentMode,
+    o.Order_Date,
+    o.CustomerName,
+    o.State,
+    o.City
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
+LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
+    ON o.Order_ID = d.Order_ID;
