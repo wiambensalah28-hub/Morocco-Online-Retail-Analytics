@@ -1,1 +1,132 @@
+/*
+====================================================
+PROJECT: Moroccan E-Commerce Analysis
+FILE: 02_cleaning.sql
+PURPOSE: Data quality checks and cleaning validation
+====================================================
+*/
 
+
+-- ==================================================
+-- STEP 1: Check the number of records in each table
+-- ==================================================
+-- The Details table should contain 1,500 records.
+-- The Orders table should contain 500 records.
+
+SELECT
+    COUNT(Order_ID) AS Details_Row_Count
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset];
+
+
+SELECT
+    COUNT(Order_ID) AS Orders_Row_Count
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset];
+
+
+-- ==================================================
+-- STEP 2: Check for NULL values
+-- ==================================================
+-- No NULL values were found during the initial import.
+-- This query is used to validate the imported data.
+
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset]
+WHERE Order_ID IS NULL
+   OR Order_Date IS NULL
+   OR CustomerName IS NULL
+   OR State IS NULL
+   OR City IS NULL;
+
+
+
+-- ==================================================
+-- STEP 3: Check for NULL values in Details
+-- ==================================================
+
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+WHERE Order_ID IS NULL
+   OR Total_Sales IS NULL
+   OR Profit IS NULL
+   OR Quantity IS NULL
+   OR Category IS NULL
+   OR Sub_Category IS NULL
+   OR PaymentMode IS NULL;
+
+
+-- ==================================================
+-- STEP 4: Check for duplicate Order_IDs in Orders
+-- ==================================================
+-- Each Order_ID is expected to represent one order
+-- in the Orders table.
+
+SELECT
+    Order_ID,
+    COUNT(*) AS Occurrences
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset]
+GROUP BY Order_ID
+HAVING COUNT(*) > 1;
+
+
+-- ==================================================
+-- STEP 5: Check for duplicate Order_IDs in Details
+-- ==================================================
+-- Multiple rows for the same Order_ID may be valid
+-- because one order can contain multiple products/items.
+
+SELECT
+    Order_ID,
+    COUNT(*) AS Occurrences
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+GROUP BY Order_ID
+HAVING COUNT(*) > 1;
+
+
+-- ==================================================
+-- STEP 6: Check distinct categories
+-- ==================================================
+
+SELECT DISTINCT
+    Category
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+ORDER BY Category;
+
+
+-- ==================================================
+-- STEP 7: Check distinct sub-categories
+-- ==================================================
+
+SELECT DISTINCT
+    Sub_Category
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+ORDER BY Sub_Category;
+
+
+-- ==================================================
+-- STEP 8: Check distinct payment methods
+-- ==================================================
+
+SELECT DISTINCT
+    PaymentMode
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+ORDER BY PaymentMode;
+
+
+-- ==================================================
+-- STEP 9: Check sales and profit values
+-- ==================================================
+-- Identify potentially unusual negative or zero values.
+
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+WHERE Total_Sales <= 0
+   OR Profit < 0;
+
+
+-- ==================================================
+-- STEP 10: Check quantity values
+-- ==================================================
+
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+WHERE Quantity <= 0;
