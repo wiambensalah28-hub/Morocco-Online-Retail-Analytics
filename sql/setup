@@ -1,1 +1,64 @@
 
+/*
+====================================================
+PROJECT: Moroccan E-Commerce Analysis
+FILE: 01_setup.sql
+PURPOSE: Database creation and initial data setup
+====================================================
+*/
+
+
+-- ==================================================
+-- STEP 1: Create the project database
+-- ==================================================
+
+CREATE DATABASE Moroccan_Ecommerce;
+
+
+-- ==================================================
+-- STEP 2: Switch to the project database
+-- ==================================================
+
+USE Moroccan_Ecommerce;
+
+
+-- ==================================================
+-- STEP 3: Import the source Excel files
+-- ==================================================
+-- The Orders and Details Excel files were imported
+-- into SQL Server using the SQL Server Import Wizard.
+--
+-- During the import process:
+-- - Data types were reviewed and assigned
+-- - NULL settings were checked
+-- - No NULL values were found
+--
+-- The following tables were created:
+-- 1. orders morocco dataset
+-- 2. details morocco dataset
+
+
+-- ==================================================
+-- STEP 4: Inspect the Orders table structure
+-- ==================================================
+
+SELECT
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'orders morocco dataset'
+ORDER BY ORDINAL_POSITION;
+
+
+-- ==================================================
+-- STEP 5: Inspect the Details table structure
+-- ==================================================
+
+SELECT
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'details morocco dataset'
+ORDER BY ORDINAL_POSITION;
