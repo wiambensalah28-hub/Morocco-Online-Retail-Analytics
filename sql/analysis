@@ -1,1 +1,149 @@
+/*
+====================================================
+PROJECT: Moroccan E-Commerce Analysis
+FILE: 03_transform_data.sql
+PURPOSE: Join source tables and create the final
+         analytical dataset
+====================================================
+*/
 
+
+-- ==================================================
+-- STEP 1: Preview the joined data
+-- ==================================================
+-- Combine the Orders and Details tables using Order_ID.
+
+SELECT
+    o.Order_ID,
+    d.Total_Sales,
+    d.Profit,
+    d.Quantity,
+    d.Category,
+    d.Sub_Category,
+    d.PaymentMode,
+    o.Order_Date,
+    o.CustomerName,
+    o.State,
+    o.City
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
+LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
+    ON o.Order_ID = d.Order_ID;
+
+
+-- ==================================================
+-- STEP 2: Create the joined table
+-- ==================================================
+
+CREATE TABLE [Moroccan_Ecommerce].[dbo].[Ecommerce_Joined] (
+    Order_ID VARCHAR(50),
+    Total_Sales DECIMAL(10,2),
+    Profit DECIMAL(10,2),
+    Quantity INT,
+    Category VARCHAR(100),
+    Sub_Category VARCHAR(100),
+    PaymentMode VARCHAR(100),
+    Order_Date DATE,
+    CustomerName VARCHAR(100),
+    State VARCHAR(100),
+    City VARCHAR(100)
+);
+
+
+-- ==================================================
+-- STEP 3: Insert the joined data
+-- ==================================================
+
+INSERT INTO [Moroccan_Ecommerce].[dbo].[Ecommerce_Joined] (
+    Order_ID,
+    Total_Sales,
+    Profit,
+    Quantity,
+    Category,
+    Sub_Category,
+    PaymentMode,
+    Order_Date,
+    CustomerName,
+    State,
+    City
+)
+SELECT
+    o.Order_ID,
+    d.Total_Sales,
+    d.Profit,
+    d.Quantity,
+    d.Category,
+    d.Sub_Category,
+    d.PaymentMode,
+    o.Order_Date,
+    o.CustomerName,
+    o.State,
+    o.City
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
+LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
+    ON o.Order_ID = d.Order_ID;
+
+
+-- ==================================================
+-- STEP 4: Create the final analytical table
+-- ==================================================
+-- Rename columns and create calculated metrics
+-- for analysis and Power BI.
+--
+-- Revenue = Total Sales
+-- Cost = Total Sales - Profit
+-- Profit Margin = Profit / Revenue × 100
+-- Sales Per Unit = Revenue / Quantity
+-- Profit Per Unit = Profit / Quantity
+-- Sales By Date = Order Date
+
+
+SELECT
+    Order_ID,
+
+    -- Renamed columns
+    Total_Sales AS Revenue,
+    Profit,
+    Quantity,
+    Category,
+    Sub_Category,
+    PaymentMode AS Payment_Mode,
+    Order_Date,
+    CustomerName AS Customer_Name,
+    State,
+    City,
+
+    -- Date field for time-based analysis
+    CAST(Order_Date AS DATE) AS Sales_By_Date,
+
+    -- Calculated columns
+    Total_Sales - Profit AS Cost,
+
+    CAST(
+        (
+            CAST(Profit AS DECIMAL(18,4))
+            / NULLIF(Total_Sales, 0)
+        ) * 100
+        AS DECIMAL(10,2)
+    ) AS Profit_Margin,
+
+    CAST(
+        Total_Sales / NULLIF(Quantity, 0)
+        AS DECIMAL(10,2)
+    ) AS Sales_Per_Unit,
+
+    CAST(
+        Profit / NULLIF(Quantity, 0)
+        AS DECIMAL(10,2)
+    ) AS Profit_Per_Unit
+
+INTO [Moroccan_Ecommerce].[dbo].[Ecommerce_Analysis]
+
+FROM [Moroccan_Ecommerce].[dbo].[Ecommerce_Joined];
+
+
+-- ==================================================
+-- STEP 5: Verify the final analytical table
+-- ==================================================
+
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[Ecommerce_Analysis];
