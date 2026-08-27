@@ -1,9 +1,9 @@
 /*
 ====================================================
 PROJECT: Moroccan E-Commerce Analysis
-FILE: 03_create_ecommerce_joined.sql
-PURPOSE: Combine Orders and Details into one
-         analytical table
+FILE: 03_transformation.sql
+PURPOSE: Join source tables and create the
+         analytical dataset
 ====================================================
 */
 
@@ -31,6 +31,12 @@ LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
     ON o.Order_ID = d.Order_ID;
 
 
+SELECT COUNT(*) AS Joined_Row_Count
+FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
+LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
+    ON o.Order_ID = d.Order_ID;
+
+
 -- ==================================================
 -- STEP 2: Create the final joined table
 -- ==================================================
@@ -40,13 +46,13 @@ CREATE TABLE Ecommerce_Joined (
     Total_Sales DECIMAL(10,2),
     Profit DECIMAL(10,2),
     Quantity INT,
-    Category VARCHAR(100),
-    Sub_Category VARCHAR(100),
-    PaymentMode VARCHAR(100),
+    Category NVARCHAR(100),
+    Sub_Category NVARCHAR(100),
+    PaymentMode NVARCHAR(100),
     Order_Date DATE,
-    CustomerName VARCHAR(100),
-    State VARCHAR(100),
-    City VARCHAR(100)
+    CustomerName NVARCHAR(100),
+    State NVARCHAR(100),
+    City NVARCHAR(100)
 );
 
 
@@ -82,3 +88,10 @@ SELECT
 FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset] AS o
 LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
     ON o.Order_ID = d.Order_ID;
+
+-- ==================================================
+-- STEP 4: Validate the created table
+-- ==================================================
+
+SELECT COUNT(*) AS Ecommerce_Joined_Row_Count
+FROM Ecommerce_Joined;
