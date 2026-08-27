@@ -29,13 +29,13 @@ USE Moroccan_Ecommerce;
 -- into SQL Server using the SQL Server Import Wizard.
 --
 -- During the import process:
--- - Data types were reviewed and assigned
--- - NULL settings were checked
--- - No NULL values were found
---
+
+-- Source columns and data types were reviewed. 
+-- NULL values were checked in the imported tables.
+
 -- The following tables were created:
--- 1. orders morocco dataset
--- 2. details morocco dataset
+-- 1. orders_morocco
+-- 2. details_morocco
 
 
 -- ==================================================
@@ -62,3 +62,13 @@ SELECT
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = 'details morocco dataset'
 ORDER BY ORDINAL_POSITION;
+
+-- ==================================================
+-- STEP 6: Check imported row counts
+-- ==================================================
+
+SELECT COUNT(*) AS Orders_Row_Count
+FROM [orders morocco dataset];
+
+SELECT COUNT(*) AS Details_Row_Count
+FROM [details morocco dataset];
