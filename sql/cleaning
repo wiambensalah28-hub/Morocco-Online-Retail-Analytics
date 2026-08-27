@@ -14,12 +14,12 @@ PURPOSE: Data quality checks and cleaning validation
 -- The Orders table should contain 500 records.
 
 SELECT
-    COUNT(Order_ID) AS Details_Row_Count
+    COUNT(*) AS Details_Row_Count
 FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset];
 
 
 SELECT
-    COUNT(Order_ID) AS Orders_Row_Count
+    COUNT(*) AS Orders_Row_Count
 FROM [Moroccan_Ecommerce].[dbo].[orders morocco dataset];
 
 
@@ -87,7 +87,7 @@ HAVING COUNT(*) > 1;
 -- ==================================================
 
 SELECT DISTINCT
-    Category
+    TRIM(Category) AS Category
 FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
 ORDER BY Category;
 
@@ -97,7 +97,7 @@ ORDER BY Category;
 -- ==================================================
 
 SELECT DISTINCT
-    Sub_Category
+    TRIM(Sub_Category) AS Sub_Category
 FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
 ORDER BY Sub_Category;
 
@@ -107,20 +107,22 @@ ORDER BY Sub_Category;
 -- ==================================================
 
 SELECT DISTINCT
-    PaymentMode
+    TRIM(PaymentMode) AS PaymentMode
 FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
 ORDER BY PaymentMode;
-
 
 -- ==================================================
 -- STEP 9: Check sales and profit values
 -- ==================================================
--- Identify potentially unusual negative or zero values.
-
+-- Check for zero or negative sales
 SELECT *
 FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
-WHERE Total_Sales <= 0
-   OR Profit < 0;
+WHERE Total_Sales <= 0;
+
+-- Check for negative profit
+SELECT *
+FROM [Moroccan_Ecommerce].[dbo].[details morocco dataset]
+WHERE Profit < 0;
 
 
 -- ==================================================
