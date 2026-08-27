@@ -38,7 +38,7 @@ LEFT JOIN [Moroccan_Ecommerce].[dbo].[details morocco dataset] AS d
 
 
 -- ==================================================
--- STEP 2: Create the final joined table
+-- STEP 2: Create the joined table
 -- ==================================================
 
 CREATE TABLE Ecommerce_Joined (
